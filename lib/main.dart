@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'question_bank.dart';
 import 'question.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //theme: ThemeData.dark(),
+      theme: ThemeData.dark(),
       home: QuizPage(),
     );
   }
@@ -29,9 +29,9 @@ class _QuizPageState extends State<QuizPage> {
   int score = 0;
   bool _enabled = true;
   bool _gameEnd = false;
-  var alertStyle = AlertStyle(
-    animationType: AnimationType.fromTop,
-    isCloseButton: false,
+//  var alertStyle = AlertStyle(
+//   animationType: AnimationType.fromTop,
+//   isCloseButton: false,
 //    isOverlayTapDismiss: false,
 //    descStyle: TextStyle(fontWeight: FontWeight.bold),
 //    animationDuration: Duration(milliseconds: 400),
@@ -44,37 +44,43 @@ class _QuizPageState extends State<QuizPage> {
 //    titleStyle: TextStyle(
 //      color: Colors.red,
 //    ),
-  );
+// );
 
   void checkAnswer(bool userAnswer) {
     if (questBank.questions[questionNumber].answer == userAnswer) {
-      answerChecks.add(
-        Icon(
-          Icons.check,
-          color: Colors.green,
-        ),
+      answerChecks[questionNumber] = Icon(
+        Icons.check,
+        color: Colors.green,
       );
       score++;
     } else {
-      answerChecks.add(
-        Icon(
-          Icons.close,
-          color: Colors.red,
-        ),
+      answerChecks[questionNumber] = Icon(
+        Icons.close,
+        color: Colors.red,
       );
     }
+    //answerChecks.add(SizedBox(width: 10,));
   }
 
   List<Icon> answerChecks = [];
+  @override
+  void initState() {
+    super.initState();
+    for (int i = 0; i < questBank.questions.length; i++) {
+      answerChecks.add(Icon(
+        Icons.trip_origin,
+        color: Color(0xFF303030),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Quiz App',
-          style: TextStyle(
-            fontSize: 30,
-          ),
+          'QuizMi',
+          style: TextStyle(fontSize: 45, fontFamily: 'LakkiReddy'),
         ),
         centerTitle: true,
       ),
@@ -86,65 +92,113 @@ class _QuizPageState extends State<QuizPage> {
             children: <Widget>[
               Expanded(
                 flex: 2,
-                child: Center(
-                  child: Text(
-                    questBank.questions[questionNumber].questionText,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 20.0, left: 15, right: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Question:',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'LakkiReddy'
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        AutoSizeText(
+                          questBank.questions[questionNumber].questionText,
+                          //textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 30,
+                            height: 1.5,
+                              fontFamily: 'LakkiReddy'
+
+                          ),
+                          maxLines: 3,
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
               Expanded(
                 flex: 1,
-                child: _gameEnd ? Container(
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                          'Your Score: $score/${questBank.questions.length}',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: (){
-                          setState(() {
-                            questionNumber = 0;
-                            score = 0;
-                            answerChecks = [];
-                            _enabled = true;
-                            _gameEnd = false;
-                          });
-                        },
-                        color: Colors.blue,
-                        child: Text(
-                            'Try Again',
-                            style: TextStyle(
-                              color: Colors.white,
+                child: _gameEnd
+                    ? Container(
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 20,
                             ),
+                            Text(
+                              'Your Score: $score/${questBank.questions.length}',
+                              style: TextStyle(
+                                fontSize: 20,
+                                  fontFamily: 'LakkiReddy'
+                              ),
+                            ),
+                            FlatButton(
+                              onPressed: () {
+                                setState(() {
+                                  questionNumber = 0;
+                                  score = 0;
+                                  answerChecks = [];
+                                  for (int i = 0;
+                                      i < questBank.questions.length;
+                                      i++) {
+                                    answerChecks.add(Icon(
+                                      Icons.trip_origin,
+                                      color: Color(0xFF303030),
+                                    ));
+                                  }
+                                  _enabled = true;
+                                  _gameEnd = false;
+                                });
+                              },
+                              color: Colors.blue,
+                              child: Text(
+                                'Try Again',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                    fontFamily: 'LakkiReddy',
+                                  fontSize: 18,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       )
-                    ],
-                  ),
-                ): SizedBox(height: 30,),
+                    : SizedBox(
+                        height: 10,
+                      ),
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 70),
                   child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
                     child: Text(
-                        'True',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
+                      'True',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                          fontFamily: 'LakkiReddy'
+                      ),
                     ),
                     onPressed: _enabled
                         ? () {
                             checkAnswer(true);
                             setState(() {
-                              if (questionNumber >= 4) {
+                              if (questionNumber == questBank.questions.length-1) {
                                 _enabled = false;
                                 _gameEnd = true;
                                 return;
@@ -160,18 +214,24 @@ class _QuizPageState extends State<QuizPage> {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 70),
                   child: FlatButton(
-                    child: Text('False',
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Text(
+                      'False',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
-                      ),),
+                        fontSize: 25,
+                          fontFamily: 'LakkiReddy'
+                      ),
+                    ),
                     onPressed: _enabled
                         ? () {
                             checkAnswer(false);
                             setState(() {
-                              if (questionNumber >= 4) {
+                              if (questionNumber == questBank.questions.length-1) {
                                 _enabled = false;
                                 _gameEnd = true;
                                 return;
@@ -188,6 +248,7 @@ class _QuizPageState extends State<QuizPage> {
               Padding(
                 padding: const EdgeInsets.only(left: 16.0, top: 3.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: answerChecks,
                 ),
               )

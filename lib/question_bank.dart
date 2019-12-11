@@ -1,11 +1,11 @@
 import 'question.dart';
 class QuestionBank {
   List<Question> questions = [
-    Question(questionText: 'Q1: Answer: true', answer: true),
-    Question(questionText: 'Q2: Answer: false', answer: false),
-    Question(questionText: 'Q3: Answer: true', answer: true),
-    Question(questionText: 'Q4: Answer: true', answer: true),
-    Question(questionText: 'Q5: Answer: false', answer: false),
+    Question(questionText: 'Yogurt is produced by bacterial fermentation of milk.', answer: true),
+    Question(questionText: 'Mario of Super Mario Bros. was once a carpenter.', answer: true),
+    Question(questionText: 'The name of Batman’s butler is Albert,', answer: false),
+    Question(questionText: 'You cannot cry in space.', answer: true),
+    Question(questionText: 'Lightning never strikes the same place twice.', answer: false),
   ];
 
 }
